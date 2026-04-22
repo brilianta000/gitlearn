@@ -89,6 +89,7 @@ if (isset($_POST['register'])) {
                                 <button type="submit" name="register" class="btn btn-primary btn-user btn-block">
                                     Daftar Akun
                                 </button>
+                            </form>
                             <hr>
                             <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>
