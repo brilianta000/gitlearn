@@ -12,7 +12,7 @@ if (isset($_POST['register'])) {
     } else {
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $conn->prepare("INSERT INTO users (nama, email, password) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $nama, $email, $hash);
 
         if ($stmt->execute()) {
@@ -67,6 +67,8 @@ if (isset($_POST['register'])) {
                             <?php if (isset($error)): ?>
                             <script>alert("<?= addslashes($error) ?>");</script>
                             <?php endif; ?>
+
+                            <!-- form  -->
                             <form class="user" method="POST" action="">
                                 <div class="form-group">
                                     <input type="text" name="nama" class="form-control form-control-user"
@@ -90,6 +92,8 @@ if (isset($_POST['register'])) {
                                     Daftar Akun
                                 </button>
                             </form>
+
+
                             <hr>
                             <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>
