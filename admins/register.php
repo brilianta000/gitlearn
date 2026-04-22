@@ -1,15 +1,25 @@
 <?php
-include 'koneksi.php';
 
-if (isset($_POST['register'])) {
-    $nama     = trim($_POST['nama']);
-    $email    = trim($_POST['email']);
-    $password = $_POST['password'];
-    $konfirm  = $_POST['konfirm'];
+require_once 'config/Database.php';
+require_once 'classes/Auth.php';
+
+$db   = new Database();
+$conn = $db->getConnection();
+$auth = new Auth($conn);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nama     = $_POST['nama']     ?? '';
+    $email    = $_POST['email']    ?? '';
+    $password = $_POST['password'] ?? '';
+    $konfirm  = $_POST['konfirm']  ?? '';
 
     if ($password !== $konfirm) {
         $error = "Password dan konfirmasi tidak cocok!";
+    } elseif ($auth->register($nama, $email, $password)) {
+        header("Location: login.php?register=success");
+        exit;
     } else {
+
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
@@ -22,6 +32,9 @@ if (isset($_POST['register'])) {
             $error = "Register gagal! Email mungkin sudah terdaftar.";
         }
         $stmt->close();
+
+        $error = "Register gagal! Email sudah terdaftar.";
+
     }
 }
 ?>

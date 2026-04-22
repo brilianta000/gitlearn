@@ -1,28 +1,20 @@
 <?php
-session_start();
-include 'koneksi.php';
+require_once 'config/Database.php';
+require_once 'classes/Auth.php';
 
-if (isset($_POST['login'])) {
-    $email    = trim($_POST['email']);
-    $password = $_POST['password'];
+$db   = new Database();
+$conn = $db->getConnection();
+$auth = new Auth($conn);
 
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user   = $result->fetch_assoc();
-    $stmt->close();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email    = $_POST['email']    ?? '';
+    $password = $_POST['password'] ?? '';
 
-    if ($user) {
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user'] = $user;
-            header("Location: admin.php");
-            exit;
-        } else {
-            $error = "Password salah!";
-        }
+    if ($auth->login($email, $password)) {
+        header("Location: admin.php");
+        exit;
     } else {
-        $error = "Email tidak ditemukan!";
+        $error = "Email atau Password salah!";
     }
 }
 ?>
