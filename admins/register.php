@@ -2,24 +2,26 @@
 include 'koneksi.php';
 
 if (isset($_POST['register'])) {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
+    $nama     = trim($_POST['nama']);
+    $email    = trim($_POST['email']);
     $password = $_POST['password'];
+    $konfirm  = $_POST['konfirm'];
 
-    // hash password
-    $hash = password_hash($password, PASSWORD_DEFAULT);
-
-    // insert ke database
-    $query = mysqli_query($conn, 
-        "INSERT INTO admin (username,email,password) 
-         VALUES ('$username','$email','$hash')"
-    );
-
-    if ($query) {
-        header("Location: login.php");
-        exit;
+    if ($password !== $konfirm) {
+        $error = "Password dan konfirmasi tidak cocok!";
     } else {
-        $error = "Register gagal!";
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt = $conn->prepare("INSERT INTO users (nama, email, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $nama, $email, $hash);
+
+        if ($stmt->execute()) {
+            header("Location: login.php?register=success");
+            exit;
+        } else {
+            $error = "Register gagal! Email mungkin sudah terdaftar.";
+        }
+        $stmt->close();
     }
 }
 ?>
@@ -62,42 +64,31 @@ if (isset($_POST['register'])) {
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
-                                    </div>
+                            <form class="user" method="POST" action="">
+                                <?php if (isset($error)): ?>
+                                    <div class="alert alert-danger text-center py-2 small"><?= htmlspecialchars($error) ?></div>
+                                <?php endif; ?>
+                                <div class="form-group">
+                                    <input type="text" name="nama" class="form-control form-control-user"
+                                        placeholder="Nama Lengkap" required value="<?= isset($_POST['nama']) ? htmlspecialchars($_POST['nama']) : '' ?>">
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
+                                    <input type="email" name="email" class="form-control form-control-user"
+                                        placeholder="Alamat Email" required value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                        <input type="password" name="password" class="form-control form-control-user"
+                                            placeholder="Password" required>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        <input type="password" name="konfirm" class="form-control form-control-user"
+                                            placeholder="Ulangi Password" required>
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
-                            </form>
+                                <button type="submit" name="register" class="btn btn-primary btn-user btn-block">
+                                    Daftar Akun
+                                </button>
                             <hr>
                             <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>

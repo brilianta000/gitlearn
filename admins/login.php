@@ -3,24 +3,26 @@ session_start();
 include 'koneksi.php';
 
 if (isset($_POST['login'])) {
-    $username = $_POST['username'];
+    $email    = trim($_POST['email']);
     $password = $_POST['password'];
 
-    // ambil data user
-    $query = mysqli_query($conn, "SELECT * FROM admin WHERE username='$username'");
-    $user = mysqli_fetch_assoc($query);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user   = $result->fetch_assoc();
+    $stmt->close();
 
     if ($user) {
-        // cek password (pakai hash)
         if (password_verify($password, $user['password'])) {
             $_SESSION['user'] = $user;
-            header("Location: dashboard.php");
+            header("Location: admin.php");
             exit;
         } else {
             $error = "Password salah!";
         }
     } else {
-        $error = "User tidak ditemukan!";
+        $error = "Email tidak ditemukan!";
     }
 }
 ?>
@@ -69,23 +71,28 @@ if (isset($_POST['login'])) {
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
                                     <form class="user" method="POST" action="">
+                                        <?php if (isset($error)): ?>
+                                            <div class="alert alert-danger text-center py-2 small"><?= htmlspecialchars($error) ?></div>
+                                        <?php endif; ?>
+                                        <?php if (isset($_GET['register']) && $_GET['register'] === 'success'): ?>
+                                            <div class="alert alert-success text-center py-2 small">Akun berhasil dibuat! Silakan login.</div>
+                                        <?php endif; ?>
                                         <div class="form-group">
-                                            <input type="text" name='username' class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter username...">
+                                            <input type="email" name="email" class="form-control form-control-user"
+                                                placeholder="Masukkan Email..."
+                                                value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>" required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name='password' class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                            <input type="password" name="password" class="form-control form-control-user"
+                                                placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
+                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
                                             </div>
                                         </div>
-                                        <button type='submit' name='login' class="btn btn-primary btn-user btn-block">
+                                        <button type="submit" name="login" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
                                         <hr>
