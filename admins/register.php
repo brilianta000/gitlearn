@@ -64,10 +64,10 @@ if (isset($_POST['register'])) {
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
+                            <?php if (isset($error)): ?>
+                            <script>alert("<?= addslashes($error) ?>");</script>
+                            <?php endif; ?>
                             <form class="user" method="POST" action="">
-                                <?php if (isset($error)): ?>
-                                    <div class="alert alert-danger text-center py-2 small"><?= htmlspecialchars($error) ?></div>
-                                <?php endif; ?>
                                 <div class="form-group">
                                     <input type="text" name="nama" class="form-control form-control-user"
                                         placeholder="Nama Lengkap" required value="<?= isset($_POST['nama']) ? htmlspecialchars($_POST['nama']) : '' ?>">

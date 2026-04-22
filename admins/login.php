@@ -72,10 +72,10 @@ if (isset($_POST['login'])) {
                                     </div>
                                     <form class="user" method="POST" action="">
                                         <?php if (isset($error)): ?>
-                                            <div class="alert alert-danger text-center py-2 small"><?= htmlspecialchars($error) ?></div>
+                                        <script>alert("<?= addslashes($error) ?>");</script>
                                         <?php endif; ?>
                                         <?php if (isset($_GET['register']) && $_GET['register'] === 'success'): ?>
-                                            <div class="alert alert-success text-center py-2 small">Akun berhasil dibuat! Silakan login.</div>
+                                        <script>alert("Akun berhasil dibuat! Silakan login.");</script>
                                         <?php endif; ?>
                                         <div class="form-group">
                                             <input type="email" name="email" class="form-control form-control-user"
