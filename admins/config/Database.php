@@ -4,13 +4,12 @@ class Database {
     private $host = 'localhost';
     private $db;
     private $user = 'root';
-    private $password;
+    private $password = '1deA050806';
 
     public $conn;
 
-    public function __construct($db, $pw){
+    public function __construct($db){
         $this->db = $db;
-        $this->password = $pw;
 
         try {
             $this->conn = null;
