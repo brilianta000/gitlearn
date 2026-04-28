@@ -27,7 +27,7 @@ class Database {
             die($e->getMessage());
         }
 
-        echo 'koneksi berhasil <br>';
+        // echo 'koneksi berhasil <br>';
 
     }
 

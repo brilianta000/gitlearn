@@ -23,13 +23,44 @@
 </head>
 
 <body id="page-top">
-    
+<?php
+
+require_once 'config/database.php';
+require_once 'classes/buku.php';
+
+$db = new Database('db_kampus');
+$buku = new Buku($db->getconn());
+
+$result = $buku->getAll();
+
+?>
+
 
     <div id="wrapper">
         <?php include 'sidebar.php' ?>
         <div id="content-wrapper" class="d-flex flex-column">
             <?php include 'topbar.php' ?>  
         </div>
+
+        <thead>
+            <tr>
+                <td>id</td>
+                <td>judul</td>
+                <td>penulis</td>
+                <td>terbit</td>
+                <td>aksi</td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($row = $result->fetch_assoc()):?>
+            <tr>
+                <td><?=  $row['id'];?></td>
+                <td><?=  $row['judul_buku'];?></td>
+                <td><?=  $row['penulis_buku'];?></td>
+                <td><?=  $row['tahun_terbit'];?></td>
+            </tr>
+            <?php endwhile ?>
+        </tbody>
     </div>
 
 
