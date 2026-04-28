@@ -3,7 +3,7 @@ require_once 'config/Database.php';
 require_once 'classes/Auth.php';
 
 $db   = new Database();
-$conn = $db->getConnection();
+$conn = $db->getConn();
 $auth = new Auth($conn);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

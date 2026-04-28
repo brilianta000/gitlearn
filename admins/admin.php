@@ -22,21 +22,21 @@ require_once 'config/database.php';
 require_once 'classes/buku.php';
 
 $db    = new Database();
-$buku  = new Buku($db->getConnection());
+$buku  = new Buku($db->getConn());
 $result = $buku->getAll();
 ?>
 
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <?php include 'sidebar.php' ?>
+    <?php include 'menu/sidebar.php' ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
 
             <!-- Topbar -->
-            <?php include 'topbar.php' ?>
+            <?php include 'menu/topbar.php' ?>
 
             <!-- Main Content -->
             <div class="container-fluid">

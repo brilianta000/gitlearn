@@ -2,14 +2,13 @@
 
 class Database {
     private $host = 'localhost';
-    private $db;
+    private $db = 'db_kampus';
     private $user = 'root';
     private $password = '1deA050806';
 
     public $conn;
 
-    public function __construct($db){
-        $this->db = $db;
+    public function __construct(){
 
         try {
             $this->conn = null;

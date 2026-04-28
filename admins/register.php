@@ -3,7 +3,7 @@
 require_once 'config/Database.php';
 require_once 'classes/Auth.php';
 
-$db   = new Database('db_kampus');
+$db   = new Database();
 $conn = $db->getConn();
 $auth = new Auth($conn);
 
