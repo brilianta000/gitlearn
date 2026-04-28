@@ -11,6 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $buku->update($id, $_POST);
 
-    header("Location: admin.php");
+    header("Location: admin.php?page=main");
     exit;
 }

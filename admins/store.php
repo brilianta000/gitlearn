@@ -9,6 +9,6 @@ $buku = new buku($conn);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $buku->store($_POST);
-    header("Location: admin.php");
+    header("Location: admin.php?page=main");
     exit;
 }

@@ -10,5 +10,5 @@ $buku = new Buku($conn);
 $id = $_GET['id'];
 $buku->delete($id);
 
-header("Location: admin.php");
+header("Location: admin.php?page=main");
 exit;
